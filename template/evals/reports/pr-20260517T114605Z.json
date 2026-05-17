@@ -1,0 +1,8 @@
+{
+  "suite": "pr",
+  "passed": true,
+  "cases": [
+    "g-001",
+    "r-001"
+  ]
+}
