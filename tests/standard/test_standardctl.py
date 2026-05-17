@@ -23,6 +23,7 @@ class StandardCtlTests(unittest.TestCase):
             (root / 'apps/web').mkdir(parents=True)
             (root / 'apps/api').mkdir(parents=True)
             (root / 'packages/api-contract').mkdir(parents=True)
+            (root / '.codex').mkdir(parents=True)
             rc = standardctl.doctor(root)
             self.assertEqual(rc, 0)
 
@@ -38,7 +39,23 @@ class StandardCtlTests(unittest.TestCase):
             rc = standardctl.doctor(root)
             self.assertEqual(rc, 1)
             (root / 'pyproject.toml').write_text('[project]\nname = "x"\n', encoding='utf-8')
+            (root / '.codex').mkdir(parents=True)
             rc2 = standardctl.doctor(root)
+            self.assertEqual(rc2, 0)
+
+    def test_doctor_claude_runtime_requires_claude_file(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            for p in ['standard.yml', 'apm.yml', 'apm.lock.yaml', '.copier-answers.yml']:
+                (root / p).write_text('x: y\n', encoding='utf-8')
+            (root / 'standard.yml').write_text('profile: ts-fullstack\n', encoding='utf-8')
+            (root / 'apps/web').mkdir(parents=True)
+            (root / 'apps/api').mkdir(parents=True)
+            (root / 'packages/api-contract').mkdir(parents=True)
+            rc = standardctl.doctor(root, 'claude')
+            self.assertEqual(rc, 1)
+            (root / '.claude.instructions.md').write_text('ok\n', encoding='utf-8')
+            rc2 = standardctl.doctor(root, 'claude')
             self.assertEqual(rc2, 0)
 
     def test_apply_writes_report(self):

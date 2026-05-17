@@ -7,6 +7,20 @@
 - `copier.yml` で profile (`ts-fullstack` / `python-ai-service` / `hybrid-product`) を切り替えます。
 - `.copier-answers.yml` と `apm.lock.yaml` は生成先で手編集しません。
 
+## Claude Code 対応（実装済み最小セット）
+
+- `copier.yml` に `agent_runtime`（`codex` / `claude` / `dual`）を追加。
+- `template/standard.yml` に `agentRuntime` を出力。
+- `scripts/standard/standardctl.py` に `doctor --runtime` / `drift --runtime` を追加。
+- Claude向け最小ガイドとして `template/.claude.instructions.md` を追加。
+
+例:
+
+```bash
+python scripts/standard/standardctl.py doctor --runtime claude
+python scripts/standard/standardctl.py drift --runtime claude
+```
+
 ## 初期ブランチ保護
 v1 では最低限として以下を設定してください。
 - main への直接 push 禁止

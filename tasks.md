@@ -1240,3 +1240,14 @@ v1標準を再現可能にリリースする。
 - 追加内容: `packages/core/.apm/skills/github-mcp-read.md` を作成。
 - README更新: GitHub MCP のセットアップ手順と認証時の確認ポイントを追記。
 - 検証: Core APM skills 一覧へ `github-mcp-read` を反映。
+
+
+- [DONE] [Cross-Agent] Codex前提構成をClaude Code対応にする変更方針を整理
+  - `docs/product-development-standard-agent-harness-v1.md` に runtime抽象化・Copier/APM/CI変更案を追記
+  - `standard.yml` 追加セクション案（`agent-harness-shared` / `agent-harness-claude-core`）を定義
+  - 検証観点として `standardctl --runtime` 導入案と受け入れ条件を明文化
+
+- [DONE] [Cross-Agent] Claude Code適用の最小実装を追加
+  - `copier.yml` に `agent_runtime` を追加し、`template/standard.yml` に `agentRuntime` を出力
+  - `standardctl` に `--runtime` オプション（doctor/drift）を追加し、Claude runtime必須ファイルチェックを実装
+  - `tests/standard/test_standardctl.py` に Claude runtime用のユニットテストを追加して検証

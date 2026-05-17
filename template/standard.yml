@@ -7,6 +7,8 @@ template:
   version: v0.1.0
   profile: "{{ profile }}"
 
+agentRuntime: "{{ agent_runtime }}"
+
 sections:
   base-toolchain:
     status: applied
@@ -14,3 +16,10 @@ sections:
   agent-harness-core:
     status: applied
     version: v1.0.0
+
+  agent-harness-shared:
+    status: planned
+    version: null
+  agent-harness-claude-core:
+    status: planned
+    version: null
