@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  python-quality:
+    name: Python quality (uv + nox)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Sync Python dependencies
+        run: uv sync --group dev
+
+      - name: Ruff
+        run: uv run nox -s ruff
+
+      - name: Pytest
+        run: uv run nox -s pytest
+
+      - name: Pyright
+        run: uv run nox -s pyright
+
+  js-static:
+    name: JavaScript static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Syntax check JavaScript files
+        run: |
+          files=$(find template -type f \( -name '*.js' -o -name '*.mjs' -o -name '*.cjs' \))
+          if [ -n "$files" ]; then
+            echo "$files" | xargs -n1 node --check
+          fi
+
+  copier-conflicts:
+    name: Copier conflict check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check reject files and conflict markers
+        run: bash scripts/check-copier-conflicts.sh
