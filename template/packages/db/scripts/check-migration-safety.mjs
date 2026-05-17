@@ -3,7 +3,14 @@ const files = readdirSync('packages/db/migrations').filter((f) => f.endsWith('.s
 const risky = [];
 for (const file of files) {
   const sql = readFileSync(`packages/db/migrations/${file}`, 'utf8').toUpperCase();
-  if (sql.includes('DROP TABLE') || sql.includes('DROP COLUMN') || sql.includes('TRUNCATE')) risky.push(file);
+  const normalizedSql = sql.replace(/\s+/g, ' ');
+  if (
+    /DROP\s+TABLE/.test(normalizedSql)
+    || /DROP\s+COLUMN/.test(normalizedSql)
+    || /TRUNCATE/.test(normalizedSql)
+  ) {
+    risky.push(file);
+  }
 }
 if (risky.length) {
   console.error(`Destructive migration detected: ${risky.join(', ')}`);
