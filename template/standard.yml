@@ -1,0 +1,16 @@
+standard:
+  name: org-product-standard
+  version: 1.0.0
+
+template:
+  source: github.com/org/product-standard-template
+  version: v0.1.0
+  profile: "{{ profile }}"
+
+sections:
+  base-toolchain:
+    status: applied
+    version: v1.0.0
+  agent-harness-core:
+    status: applied
+    version: v1.0.0

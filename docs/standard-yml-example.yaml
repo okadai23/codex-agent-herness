@@ -1,0 +1,15 @@
+standard:
+  name: org-product-standard
+  version: 1.0.0
+template:
+  source: github.com/org/product-standard-template
+  version: v0.1.0
+  profile: ts-fullstack
+agentHarness:
+  apmPackages:
+    - name: org/product-agent-harness-core
+      version: v1.0.0
+sections:
+  base-toolchain:
+    status: applied
+    version: v1.0.0
