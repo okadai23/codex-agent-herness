@@ -1,0 +1,3 @@
+name: product-agent-harness-frontend-e2e
+version: 0.1.0
+description: APM package for frontend-e2e workflows
