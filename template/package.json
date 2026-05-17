@@ -8,6 +8,11 @@
     "api:test": "playwright test tests/api",
     "e2e:mock": "PW_API_MODE=mock playwright test tests/e2e",
     "e2e:real": "PW_API_MODE=real playwright test tests/e2e",
-    "monkey": "playwright test tests/monkey"
+    "monkey": "playwright test tests/monkey",
+    "db:migrate:dev": "node packages/db/scripts/migrate-dev.mjs",
+    "db:migrate:deploy": "node packages/db/scripts/migrate-deploy.mjs",
+    "db:seed:e2e": "node packages/db/scripts/seed-scenario.mjs base",
+    "db:reset:test": "node packages/db/scripts/reset-test-db.mjs",
+    "db:verify": "node packages/db/scripts/check-migration-safety.mjs"
   }
 }
