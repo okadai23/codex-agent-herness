@@ -21,6 +21,26 @@ python scripts/standard/standardctl.py doctor --runtime claude
 python scripts/standard/standardctl.py drift --runtime claude
 ```
 
+## Ubuntu / macOS 向け Agent ツール導入
+
+`apm` / `Claude Code` / 周辺ライブラリをまとめて導入するスクリプトを追加しています。
+
+```bash
+./scripts/install-agent-tooling.sh
+```
+
+オプション環境変数:
+
+- `INSTALL_APM=0`: APM の導入をスキップ
+- `INSTALL_CLAUDE_CODE=0`: Claude Code の導入をスキップ
+- `INSTALL_NODE_LIBS=0`: `pnpm` / `typescript` / `tsx` の導入をスキップ
+
+例:
+
+```bash
+INSTALL_CLAUDE_CODE=0 ./scripts/install-agent-tooling.sh
+```
+
 ## 初期ブランチ保護
 v1 では最低限として以下を設定してください。
 - main への直接 push 禁止
