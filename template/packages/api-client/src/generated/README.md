@@ -1,0 +1,3 @@
+# generated client
+
+// AUTO-GENERATED FILES. DO NOT EDIT DIRECTLY.
