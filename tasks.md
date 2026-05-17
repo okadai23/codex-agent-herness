@@ -537,7 +537,7 @@ APM Agent Harness更新を標準化する。
 
 ## Phase 4: TypeScript fullstack標準機能
 
-### T04-01: OpenAPI + Orval + MSW生成を実装する
+### T04-01: OpenAPI + Orval + MSW生成を実装する ✅ DONE
 
 **Goal**  
 API contractから型、client、mockを生成できるようにする。
@@ -558,7 +558,7 @@ API contractから型、client、mockを生成できるようにする。
 
 ---
 
-### T04-02: Prism mock serverを実装する
+### T04-02: Prism mock serverを実装する ✅ DONE
 
 **Goal**  
 backend未完成でもOpenAPIからmock APIを使えるようにする。
@@ -577,7 +577,7 @@ backend未完成でもOpenAPIからmock APIを使えるようにする。
 
 ---
 
-### T04-03: Playwright API testを実装する
+### T04-03: Playwright API testを実装する ✅ DONE
 
 **Goal**  
 実backendがOpenAPI契約に合っているか検証する。
@@ -596,7 +596,7 @@ backend未完成でもOpenAPIからmock APIを使えるようにする。
 
 ---
 
-### T04-04: Playwright E2E mock/real modeを実装する
+### T04-04: Playwright E2E mock/real modeを実装する ✅ DONE
 
 **Goal**  
 frontend E2Eをmock APIとreal APIの両方で実行できるようにする。
@@ -615,7 +615,7 @@ frontend E2Eをmock APIとreal APIの両方で実行できるようにする。
 
 ---
 
-### T04-05: Playwright monkey testを実装する
+### T04-05: Playwright monkey testを実装する ✅ DONE
 
 **Goal**  
 UI crash、console error、navigation dead-endを探索できるようにする。
@@ -1199,3 +1199,10 @@ v1標準を再現可能にリリースする。
   - `scripts/standard/standardctl.py` に doctor/drift/apply/update-template/update-harness を追加
   - `tests/standard/test_standardctl.py` で doctor と apply の主要ユースケースをテスト
   - adoption report の自動生成先を `docs/harness/adoptions/` に統一
+
+
+#### Phase 4 実装メモ（2026-05-17）
+- [DONE] OpenAPI/Orval/MSWの雛形を `template/` に追加し、`api:lint`/`api:generate` スクリプトを定義。
+- [DONE] Prism mock server起動用の `api:mock` スクリプトと起動ドキュメントを追加。
+- [DONE] Playwright の API test / monkey test 雛形、および `e2e:mock` / `e2e:real` コマンドを追加。
+- 検証: `python -m unittest tests.standard.test_standardctl` を実行して既存テストの回帰なしを確認。
