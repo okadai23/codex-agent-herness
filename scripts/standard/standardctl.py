@@ -73,7 +73,12 @@ def doctor(root: Path) -> int:
         checks.append(CheckResult('OK' if (root / name).exists() else 'WARN', f'{name}'))
 
     std = load_standard_yaml(root / 'standard.yml')
-    profile = str(std.get('profile', ''))
+    template = std.get('template')
+    profile = ''
+    if isinstance(template, dict):
+        profile = str(template.get('profile', '')).strip()
+    if not profile:
+        profile = str(std.get('profile', '')).strip()
     for p in expected_paths_for_profile(profile):
         checks.append(CheckResult('OK' if (root / p).exists() else 'ERROR', f'profile-required: {p}'))
 
@@ -135,7 +140,15 @@ def update_harness(root: Path) -> int:
 def apply_section(root: Path, section: str) -> int:
     code = 0
     if section in {'api-contract-openapi', 'ts-fullstack'}:
-        code, _ = run_cmd(['copier', 'update', '--defaults', '--conflict', 'rej'], root)
+        code, _ = run_cmd([
+            'copier',
+            'update',
+            '--defaults',
+            '--conflict',
+            'rej',
+            '--data',
+            f'sections.{section}=true',
+        ], root)
         if code != 0:
             return code
     code, _ = run_cmd(['apm', 'install'], root)
