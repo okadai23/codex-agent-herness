@@ -32,7 +32,8 @@ class StandardCtlTests(unittest.TestCase):
             root = Path(td)
             for p in ['standard.yml', 'apm.yml', 'apm.lock.yaml', '.copier-answers.yml']:
                 (root / p).write_text('x: y\n', encoding='utf-8')
-            (root / 'standard.yml').write_text('template:\n  profile: python-ai-service\n', encoding='utf-8')
+            standard = 'template:\n  profile: python-ai-service\n'
+            (root / 'standard.yml').write_text(standard, encoding='utf-8')
             (root / 'tests').mkdir(parents=True)
             (root / 'prompts').mkdir(parents=True)
             rc = standardctl.doctor(root)
