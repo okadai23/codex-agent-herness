@@ -93,7 +93,8 @@ def doctor(root: Path, runtime: str = 'codex') -> int:
         checks.append(CheckResult(level, f'profile-required: {p}'))
 
     for p in runtime_required_paths(runtime):
-        checks.append(CheckResult('OK' if (root / p).exists() else 'ERROR', f'runtime-required({runtime}): {p}'))
+        level = 'OK' if (root / p).exists() else 'ERROR'
+        checks.append(CheckResult(level, f'runtime-required({runtime}): {p}'))
 
     errors = [c for c in checks if c.level == 'ERROR']
     for c in checks:
