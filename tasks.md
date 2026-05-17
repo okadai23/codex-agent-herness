@@ -1251,3 +1251,22 @@ v1標準を再現可能にリリースする。
   - `copier.yml` に `agent_runtime` を追加し、`template/standard.yml` に `agentRuntime` を出力
   - `standardctl` に `--runtime` オプション（doctor/drift）を追加し、Claude runtime必須ファイルチェックを実装
   - `tests/standard/test_standardctl.py` に Claude runtime用のユニットテストを追加して検証
+### T00-04: GitHub Actions CI を整備する ✅ DONE
+
+**Goal**  
+この管理repoの最小CI（ユニットテスト + Copier競合検出）をGitHub Actionsで常時実行できるようにする。
+
+**Progress Notes**
+- `.github/workflows/ci.yml` を追加し、`push(main)` と `pull_request` で起動するCIを作成。
+- `python -m unittest tests.standard.test_standardctl` を実行するユニットテストジョブを追加。
+- `scripts/check-copier-conflicts.sh` を実行するジョブを追加し、`.rej` と conflict marker の混入を検出可能にした。
+
+### T00-05: CIをuv/nox基盤へ拡張しPython+JavaScript静的解析を追加する ✅ DONE
+
+**Goal**  
+CIを `uv + pyproject.toml + nox` ベースに移行し、Pythonの品質ゲート（Ruff/pytest/Pyright）とJavaScript側の静的解析を追加する。
+
+**Progress Notes**
+- ルートに `pyproject.toml` と `noxfile.py` を追加し、`ruff` / `pytest` / `pyright` セッションを定義。
+- ルート `uv.lock` を生成し、CIで `uv sync --group dev` して再現性ある依存解決を可能化。
+- `.github/workflows/ci.yml` を更新し、`python-quality` ジョブ（uv+nox）と `js-static` ジョブ（`node --check`）を追加。

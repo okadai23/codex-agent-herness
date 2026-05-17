@@ -89,7 +89,8 @@ def doctor(root: Path, runtime: str = 'codex') -> int:
     if not profile:
         profile = str(std.get('profile', '')).strip()
     for p in expected_paths_for_profile(profile):
-        checks.append(CheckResult('OK' if (root / p).exists() else 'ERROR', f'profile-required: {p}'))
+        level = 'OK' if (root / p).exists() else 'ERROR'
+        checks.append(CheckResult(level, f'profile-required: {p}'))
 
     for p in runtime_required_paths(runtime):
         checks.append(CheckResult('OK' if (root / p).exists() else 'ERROR', f'runtime-required({runtime}): {p}'))
@@ -145,7 +146,8 @@ def update_harness(root: Path) -> int:
     ]
     for cmd in cmds:
         code, out = run_cmd(cmd, root)
-        print(f'$ {' '.join(cmd)}\n{out}\n')
+        joined = ' '.join(cmd)
+        print(f'$ {joined}\n{out}\n')
         if code != 0:
             return code
     return 0
