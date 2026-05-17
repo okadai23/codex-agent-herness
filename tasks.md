@@ -1190,3 +1190,7 @@ v1標準を再現可能にリリースする。
   - `copier.yml` と `template/` の基本ファイルを作成
   - ts/python/hybrid を選べる profile 設定を追加
   - update 手順と conflict 検出スクリプトを追加
+- [DONE] [Phase2] APM Agent Harness package 群（core/docs/template-adoption/ts/api/e2e/db/python/ai）を追加
+  - `packages/*/apm.yml` と `.apm/instructions|skills|agents` を新規作成し、各タスクで要求された skill / subagent 名を実装
+  - core に secret handling と generated file edit 禁止ルールを明文化
+  - api-contract / frontend-e2e / db / python / ai-evals / ai-safety で受け入れ条件に対応する実務ルールを追加
