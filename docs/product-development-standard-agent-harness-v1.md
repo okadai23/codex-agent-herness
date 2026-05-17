@@ -1166,3 +1166,101 @@ on:
 jobs:
   ap
 ```
+
+
+
+## 13. Codex前提リポジトリをClaude Codeでも利用するための変更方針
+
+### 13.1 方針
+
+- **Agent依存物を抽象化**し、`Codex専用` と `Claude共通` を分離する。
+- 生成物（`AGENTS.md` / `.codex/**` / `.agents/**`）は「単一ツール依存の固定資産」ではなく、**agent profileごとに再生成**できる状態にする。
+- リポジトリ運用は `standard.yml` で「どのAgent profileを適用済みか」を追跡する。
+
+### 13.2 追加する標準セクション
+
+`standard.yml` の sections に次を追加する。
+
+- `agent-harness-claude-core`
+- `agent-harness-shared`
+
+`agent-harness-shared` は以下を格納する。
+
+- 言語別 verify コマンド（`pnpm verify:fast` / `uv run pytest` など）
+- generated file edit 禁止ルール
+- secret / PII / destructive command の共通安全ルール
+- docs 影響判定と更新手順
+
+`agent-harness-claude-core` は以下を格納する。
+
+- Claude Code 向けの system / project instructions
+- Claude 側での subagent 相当運用（必要時）
+- Claude 用の tool/use policy（許可・禁止コマンド）
+
+### 13.3 テンプレート変更（Copier）
+
+`copier.yml` に `agent_runtime` 変数を追加し、最低でも以下を選択可能にする。
+
+- `codex`
+- `claude`
+- `dual`（両対応）
+
+`template/` では以下を実装する。
+
+1. `agent_runtime=codex` の場合のみ `.codex/**` を生成。
+2. `agent_runtime=claude` の場合のみ Claude 用設定ファイル群を生成。
+3. `dual` の場合は両方生成し、READMEに「優先する実行ランタイム」と「生成物の責務」を記載。
+
+### 13.4 Harnessパッケージ変更（APM）
+
+現行 `product-agent-harness-core` を以下に分割する。
+
+- `product-agent-harness-shared-core`
+- `product-agent-harness-codex-core`
+- `product-agent-harness-claude-core`
+
+既存スキルは次の原則で再配置する。
+
+- Codex固有API/記法に依存しないもの → `shared-core`
+- Codex専用（`.codex/**` 前提） → `codex-core`
+- Claude専用（Claude Codeの実行制約前提） → `claude-core`
+
+### 13.5 ドキュメント変更
+
+最低限以下を追加する。
+
+- `docs/agent-runtimes/codex.md`
+- `docs/agent-runtimes/claude.md`
+- `docs/agent-runtimes/dual-runtime-policy.md`
+
+`dual-runtime-policy` には次を明記する。
+
+- どのファイルが共通管理か
+- どのファイルがCodex専用/Claude専用か
+- 両方が同一PRで編集された場合のレビュー観点
+
+### 13.6 CI / 検証コマンド変更
+
+CIを runtime matrix 化し、少なくとも次を実行する。
+
+- `standardctl doctor --runtime codex`
+- `standardctl doctor --runtime claude`
+- `standardctl drift --runtime codex`
+- `standardctl drift --runtime claude`
+
+`standardctl` には `--runtime` オプションを追加し、存在チェック対象を切り替える。
+
+### 13.7 移行手順（既存Codex前提repo）
+
+1. `standard.yml` に `agent-harness-shared` と `agent-harness-claude-core` を `planned` で追加。  
+2. `standardctl apply --section agent-harness-shared` を適用。  
+3. `standardctl apply --section agent-harness-claude-core` を適用。  
+4. CI matrix に `runtime=claude` を追加。  
+5. dual runtimeで1〜2スプリント運用し、不要なCodex専用依存を削減。  
+
+### 13.8 受け入れ条件（Claude対応完了の定義）
+
+- Claude runtimeで、必須 verify（lint/test/docs）が実行可能。
+- Codex runtimeとClaude runtimeで、共通生成物の差分ポリシーが衝突しない。
+- `standardctl doctor/drift` が両runtimeで成功する。
+- リポジトリREADMEに Claude 実行手順が明記されている。

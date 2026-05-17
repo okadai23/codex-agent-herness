@@ -62,7 +62,16 @@ def expected_paths_for_profile(profile: str) -> list[str]:
     return mapping.get(profile, [])
 
 
-def doctor(root: Path) -> int:
+def runtime_required_paths(runtime: str) -> list[str]:
+    mapping = {
+        'codex': ['.codex'],
+        'claude': ['.claude.instructions.md'],
+        'dual': ['.codex', '.claude.instructions.md'],
+    }
+    return mapping.get(runtime, [])
+
+
+def doctor(root: Path, runtime: str = 'codex') -> int:
     checks: list[CheckResult] = []
     required = ['standard.yml', 'apm.yml', 'apm.lock.yaml']
     optional_warn = ['.copier-answers.yml']
@@ -83,20 +92,25 @@ def doctor(root: Path) -> int:
         level = 'OK' if (root / p).exists() else 'ERROR'
         checks.append(CheckResult(level, f'profile-required: {p}'))
 
+    for p in runtime_required_paths(runtime):
+        checks.append(CheckResult('OK' if (root / p).exists() else 'ERROR', f'runtime-required({runtime}): {p}'))
+
     errors = [c for c in checks if c.level == 'ERROR']
     for c in checks:
         print(f'[{c.level}] {c.message}')
     return 1 if errors else 0
 
 
-def drift(root: Path) -> int:
+def drift(root: Path, runtime: str = 'codex') -> int:
     cmds = [
         ['copier', 'check-update'],
         ['apm', 'outdated'],
-        ['pnpm', 'api:generate', '--check'],
-        ['pnpm', 'docs:verify'],
         ['apm', 'compile', '--validate'],
     ]
+    if runtime in {'codex', 'dual', 'claude'}:
+        cmds.append(['pnpm', 'docs:verify'])
+    if runtime in {'codex', 'dual'}:
+        cmds.append(['pnpm', 'api:generate', '--check'])
     results = []
     for cmd in cmds:
         code, out = run_cmd(cmd, root)
@@ -193,8 +207,10 @@ def apply_section(root: Path, section: str) -> int:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog='standardctl')
     sub = p.add_subparsers(dest='cmd', required=True)
-    sub.add_parser('doctor')
-    sub.add_parser('drift')
+    d = sub.add_parser('doctor')
+    d.add_argument('--runtime', choices=['codex', 'claude', 'dual'], default='codex')
+    dr = sub.add_parser('drift')
+    dr.add_argument('--runtime', choices=['codex', 'claude', 'dual'], default='codex')
     aps = sub.add_parser('apply')
     aps.add_argument('--section', required=True)
     sub.add_parser('update-template')
@@ -206,9 +222,9 @@ def main(argv: Iterable[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     root = Path.cwd()
     if args.cmd == 'doctor':
-        return doctor(root)
+        return doctor(root, args.runtime)
     if args.cmd == 'drift':
-        return drift(root)
+        return drift(root, args.runtime)
     if args.cmd == 'apply':
         return apply_section(root, args.section)
     if args.cmd == 'update-template':

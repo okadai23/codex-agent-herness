@@ -14,6 +14,14 @@ profile:
     - python-ai-service
     - hybrid-product
 
+agent_runtime:
+  type: str
+  default: codex
+  choices:
+    - codex
+    - claude
+    - dual
+
 sections:
   type: yaml
   default:
