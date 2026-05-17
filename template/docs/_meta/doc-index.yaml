@@ -1,0 +1,22 @@
+mappings:
+  - id: api-contract
+    when:
+      - packages/api-contract/**
+      - packages/api-client/**
+      - packages/api-mocks/**
+      - apps/api/**
+    docs:
+      - docs/api-mock.md
+  - id: ai-service
+    when:
+      - services/ai/**
+      - prompts/**
+      - evals/**
+      - policies/**
+    docs:
+      - docs/harness/changelog.md
+  - id: db
+    when:
+      - packages/db/**
+    docs:
+      - docs/db-seed-scenarios.md

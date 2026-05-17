@@ -154,14 +154,34 @@ def apply_section(root: Path, section: str) -> int:
     code, _ = run_cmd(['apm', 'install'], root)
     if code != 0:
         return code
-    verify_code, verify_out = run_cmd(['apm', 'compile', '--validate'], root)
+    verify_cmd = ['apm', 'compile', '--validate']
+    verify_code, verify_out = run_cmd(verify_cmd, root)
+
+    diff_code, diff_out = run_cmd(['git', 'status', '--short'], root)
+    if diff_code != 0:
+        diff_out = 'git status unavailable'
+
+    unresolved_risks = []
+    if verify_code != 0:
+        unresolved_risks.append('apm compile --validate failed')
+    if '.rej' in diff_out:
+        unresolved_risks.append('copier reject files detected')
 
     report_dir = root / 'docs' / 'harness' / 'adoptions'
     report_dir.mkdir(parents=True, exist_ok=True)
     date = dt.datetime.now(dt.UTC).strftime('%Y-%m-%d')
     report = report_dir / f'{date}-{section}.md'
+    risk_lines = '\n'.join(f'- {r}' for r in unresolved_risks) if unresolved_risks else '- なし'
     report.write_text(
-        f"# Adoption report: {section}\n\n- date: {date}\n- verify_exit_code: {verify_code}\n\n## verify output\n\n```\n{verify_out}\n```\n",
+        f"# Adoption report: {section}\n\n"
+        f"- date: {date}\n"
+        f"- section: {section}\n"
+        f"\n## 変更内容\n\n"
+        f"```\n{diff_out}\n```\n"
+        f"\n## 検証コマンド\n\n"
+        f"- {' '.join(verify_cmd)} (exit_code={verify_code})\n"
+        f"\n## 検証出力\n\n```\n{verify_out}\n```\n"
+        f"\n## 未解決リスク\n\n{risk_lines}\n",
         encoding='utf-8',
     )
     print(f'Wrote report: {report}')

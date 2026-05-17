@@ -60,6 +60,11 @@ class StandardCtlTests(unittest.TestCase):
             reports = list((root / 'docs/harness/adoptions').glob('*-api-contract-openapi.md'))
             self.assertTrue(reports)
             self.assertGreaterEqual(len(calls), 2)
+
+            content = reports[0].read_text(encoding='utf-8')
+            self.assertIn('## 変更内容', content)
+            self.assertIn('## 検証コマンド', content)
+            self.assertIn('## 未解決リスク', content)
             self.assertIn('--data', calls[0])
             self.assertIn('sections.api-contract-openapi=true', calls[0])
 

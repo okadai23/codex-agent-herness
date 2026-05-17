@@ -13,6 +13,8 @@
     "db:migrate:deploy": "node packages/db/scripts/migrate-deploy.mjs",
     "db:seed:e2e": "node packages/db/scripts/seed-scenario.mjs base",
     "db:reset:test": "node packages/db/scripts/reset-test-db.mjs",
-    "db:verify": "node packages/db/scripts/check-migration-safety.mjs"
+    "db:verify": "node packages/db/scripts/check-migration-safety.mjs",
+    "docs:impact": "node scripts/docs/doc-impact.mjs",
+    "docs:verify": "node scripts/docs/verify-docs.mjs"
   }
 }
