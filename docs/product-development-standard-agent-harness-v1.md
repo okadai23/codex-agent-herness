@@ -552,6 +552,9 @@ skills:
   - product-standard-adoption
   - standard-section-applier
   - standard-template-update
+  - notion-mcp-read
+  - notion-mcp-write
+  - github-mcp-read
 
 subagents:
   - harness_safety_reviewer

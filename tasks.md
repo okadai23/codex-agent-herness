@@ -1226,3 +1226,17 @@ v1標準を再現可能にリリースする。
 - [DONE] Prism mock server起動用の `api:mock` スクリプトと起動ドキュメントを追加。
 - [DONE] Playwright の API test / monkey test 雛形、および `e2e:mock` / `e2e:real` コマンドを追加。
 - 検証: `python -m unittest tests.standard.test_standardctl` を実行して既存テストの回帰なしを確認。
+
+
+### T02-01a: Notion MCP read/write Skill を追加する ✅ DONE
+
+- 追加内容: `packages/core/.apm/skills/notion-mcp-read.md` と `packages/core/.apm/skills/notion-mcp-write.md` を作成。
+- README更新: Notion MCP のセットアップ手順と認証時の確認ポイントを追記。
+- 検証: 追加スキル一覧を標準ドキュメントへ反映。
+
+
+### T02-01b: GitHub MCP read Skill を追加する ✅ DONE
+
+- 追加内容: `packages/core/.apm/skills/github-mcp-read.md` を作成。
+- README更新: GitHub MCP のセットアップ手順と認証時の確認ポイントを追記。
+- 検証: Core APM skills 一覧へ `github-mcp-read` を反映。
