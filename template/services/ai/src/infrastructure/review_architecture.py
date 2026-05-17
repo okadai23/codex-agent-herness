@@ -4,7 +4,10 @@ FORBIDDEN_IN_DOMAIN = ("fastapi", "openai", "anthropic")
 
 
 def main() -> int:
-    root = Path(__file__).resolve().parents[2] / "domain"
+    root = Path(__file__).resolve().parents[1] / "domain"
+    if not root.exists():
+        print(f"architecture boundary check failed: domain directory not found at {root}")
+        return 1
     violations: list[str] = []
     for path in root.rglob("*.py"):
         text = path.read_text(encoding="utf-8")
