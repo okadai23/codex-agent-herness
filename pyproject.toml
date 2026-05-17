@@ -1,0 +1,29 @@
+[project]
+name = "product-standard-template-ci"
+version = "0.1.0"
+description = "CI tooling for product-standard-template"
+requires-python = ">=3.11"
+
+[dependency-groups]
+dev = [
+  "nox>=2025.5.1",
+  "pytest>=8.3.0",
+  "pyright>=1.1.400",
+  "ruff>=0.11.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.pyright]
+pythonVersion = "3.11"
+include = ["scripts", "tests"]
+typeCheckingMode = "basic"

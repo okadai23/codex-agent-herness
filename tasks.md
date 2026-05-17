@@ -1240,3 +1240,23 @@ v1標準を再現可能にリリースする。
 - 追加内容: `packages/core/.apm/skills/github-mcp-read.md` を作成。
 - README更新: GitHub MCP のセットアップ手順と認証時の確認ポイントを追記。
 - 検証: Core APM skills 一覧へ `github-mcp-read` を反映。
+
+### T00-04: GitHub Actions CI を整備する ✅ DONE
+
+**Goal**  
+この管理repoの最小CI（ユニットテスト + Copier競合検出）をGitHub Actionsで常時実行できるようにする。
+
+**Progress Notes**
+- `.github/workflows/ci.yml` を追加し、`push(main)` と `pull_request` で起動するCIを作成。
+- `python -m unittest tests.standard.test_standardctl` を実行するユニットテストジョブを追加。
+- `scripts/check-copier-conflicts.sh` を実行するジョブを追加し、`.rej` と conflict marker の混入を検出可能にした。
+
+### T00-05: CIをuv/nox基盤へ拡張しPython+JavaScript静的解析を追加する ✅ DONE
+
+**Goal**  
+CIを `uv + pyproject.toml + nox` ベースに移行し、Pythonの品質ゲート（Ruff/pytest/Pyright）とJavaScript側の静的解析を追加する。
+
+**Progress Notes**
+- ルートに `pyproject.toml` と `noxfile.py` を追加し、`ruff` / `pytest` / `pyright` セッションを定義。
+- ルート `uv.lock` を生成し、CIで `uv sync --group dev` して再現性ある依存解決を可能化。
+- `.github/workflows/ci.yml` を更新し、`python-quality` ジョブ（uv+nox）と `js-static` ジョブ（`node --check`）を追加。
