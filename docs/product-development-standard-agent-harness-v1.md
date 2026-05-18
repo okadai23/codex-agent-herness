@@ -1264,3 +1264,36 @@ CIを runtime matrix 化し、少なくとも次を実行する。
 - Codex runtimeとClaude runtimeで、共通生成物の差分ポリシーが衝突しない。
 - `standardctl doctor/drift` が両runtimeで成功する。
 - リポジトリREADMEに Claude 実行手順が明記されている。
+
+---
+
+## 23. v1.0追補（2026-05-17）: 本リポジトリ実装との整合メモ
+
+本追補は、v1.0本文（第1〜22章）を置き換えるものではなく、**このリポジトリの現実装に対する差分管理メモ**である。
+
+### 23.1 位置づけ
+
+- 仕様本文は第1〜22章を正とする。
+- 第13章「Codex前提リポジトリをClaude Codeでも利用するための変更方針」は、**v1.1候補の拡張方針**として扱う。
+- v1.0の必須要件と、v1.1候補（runtime二重対応）は区別して運用する。
+
+### 23.2 v1.0時点で実装済み（このrepo）
+
+- `copier.yml` に `agent_runtime`（`codex` / `claude` / `dual`）が存在する。
+- `template/standard.yml` に `agentRuntime` および `agent-harness-shared` / `agent-harness-claude-core` セクションが存在する。
+- `scripts/standard/standardctl.py` に `doctor --runtime` / `drift --runtime` が存在する。
+
+### 23.3 未完了（v1.1候補として継続管理）
+
+以下は第13章要件に対して未完了のため、`tasks.md` 側で継続タスク化する。
+
+- `agent_runtime` に連動した runtime別生成物（`.codex/**` と Claude設定群）のテンプレート分岐実装。
+- `docs/agent-runtimes/codex.md` / `claude.md` / `dual-runtime-policy.md` の追加。
+- CIのruntime matrix化（`standardctl doctor/drift --runtime codex|claude`）。
+- APM package分割（`shared-core` / `codex-core` / `claude-core`）。
+
+### 23.4 運用ルール（暫定）
+
+- 当面、`agent_runtime` は `standard.yml` 記録用途と `standardctl` 検証用途を主目的とする。
+- runtime別生成物が揃うまでは、テンプレート利用側READMEに「未実装項目」を明示する。
+- v1.1化時に第13章内容を独立章として再採番し、CI受け入れ条件と合わせて昇格させる。
